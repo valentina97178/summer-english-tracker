@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暑期英文複習互動式進度表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #4c51bf;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #4c51bf;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3730a3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c53030;
+        }
+        
+        .btn-success {
+            background: #38a169;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #2f855a;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #4c51bf;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4c51bf;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.9em;
+        }
+        
+        .week-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .week-tab {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #e2e8f0;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .week-tab.active {
+            background: #4c51bf;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 81, 191, 0.3);
+        }
+        
+        .week-content {
+            display: none;
+        }
+        
+        .week-content.active {
+            display: block;
+        }
+        
+        .class-info {
+            background: #f0fff4;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #38a169;
+        }
+        
+        .tasks {
+            background: #fffaf0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ed8936;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .task-item.completed {
+            background: #f0fff4;
+            border-color: #38a169;
+            opacity: 0.8;
+        }
+        
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #38a169;
+        }
+        
+        .custom-task {
+            border-left: 3px solid #805ad5;
+        }
+        
+        .custom-task .task-text {
+            font-style: italic;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e0;
+            border-radius: 50%;
+            margin-right: 15px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .task-item.completed .checkbox {
+            background: #38a169;
+            border-color: #38a169;
+        }
+        
+        .task-item.completed .checkbox::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .task-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        
+        .task-text {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        
+        .progress-bar {
+            background: #e2e8f0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4c51bf, #667eea);
+            transition: width 0.5s ease;
+        }
+        
+        .tips {
+            background: #ebf8ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #3182ce;
+        }
+        
+        .help-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #805ad5;
+        }
+        
+        .celebration {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .celebration.show {
+            display: block;
+            animation: bounce 0.6s ease;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+            40%, 43% { transform: translate3d(0,-30px,0); }
+            70% { transform: translate3d(0,-15px,0); }
+            90% { transform: translate3d(0,-4px,0); }
+        }
+        
+        @media print {
+            .action-buttons, .btn {
+                display: none !important;
+            }
+            
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+            }
+            
+            body {
+                background: white;
+                padding: 0;
+            }
+        }
+        
+        .print-info {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f8ff;
+            border-radius: 10px;
+        }
+        
+        @media print {
+            .print-info {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 暑期英文複習互動式進度表</h1>
+            <p>追蹤你的學習進度，達成每週目標！</p>
+        </div>
+
+        <div class="action-buttons">
+            <button type="button" class="btn btn-primary" id="saveProgressBtn">
+                💾 保存進度
+            </button>
+            <button type="button" class="btn btn-success" id="exportOptionsBtn">
+                📄 匯出進度
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">
+                🖨️ 列印
+            </button>
+            <button type="button" class="btn btn-danger" id="resetBtn">
+                🔄 重置進度
+            </button>
+            <button type="button" class="btn btn-secondary" id="helpBtn">
+                ❓ 使用說明
+            </button>
+            <button type="button" class="btn btn-primary" id="taskManagerBtn">
+                ⚙️ 任務管理
+            </button>
+        </div>
+
+        <div class="print-info">
+            <h3>📊 學習進度記錄表</h3>
+            <p>列印時間：<span id="print-date"></span></p>
+            <p>總完成度：<span id="print-total-progress">0%</span></p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProgress">0%</div>
+                <div class="stat-label">總進度</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="vocabProgress">0%</div>
+                <div class="stat-label">單字</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="translationProgress">0%</div>
+                <div class="stat-label">翻譯</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="clozeProgress">0%</div>
+                <div class="stat-label">克漏字</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="readingProgress">0%</div>
+                <div class="stat-label">閱讀</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="essayProgress">0%</div>
+                <div class="stat-label">作文</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="b5Progress">0%</div>
+                <div class="stat-label">B5課文</div>
+            </div>
+        </div>
+
+        <div class="week-tabs">
+            <button type="button" class="week-tab active" data-week="1">第1週 (7/6)</button>
+            <button type="button" class="week-tab" data-week="2">第2週 (7/13)</button>
+            <button type="button" class="week-tab" data-week="3">第3週 (7/20)</button>
+            <button type="button" class="week-tab" data-week="4">第4週 (7/27)</button>
+            <button type="button" class="week-tab" data-week="5">第5週 (8/3)</button>
+            <button type="button" class="week-tab" data-week="6">第6週 (8/10)</button>
+            <button type="button" class="week-tab" data-week="7">第7週 (8/17)</button>
+            <button type="button" class="week-tab" data-week="8">第8週 (8/24)</button>
+        </div>
+
+        <!-- Week 1 Content -->
+        <div class="week-content active" id="week1">
+            <div class="class-info">
+                <h3>📅 第1週課堂內容 (7/6)</h3>
+                <p><strong>前15分鐘：</strong>📊 課堂測驗 <input type="number" id="test1" placeholder="分數" style="width:60px; margin-left:10px; padding:2px; border:1px solid #ccc; border-radius:4px;"></p>
+                <p><strong>接下來30分鐘：</strong>📖 Lesson 1 課文重點講解</p>
+                <p><strong>剩餘時間：</strong>🔍 錯題講解</p>
+                <p><strong>最後30分鐘：</strong>✒️ 圖片題作文講解</p>
+            </div>
+            <div class="tasks">
+                <h3>✅ 第1週學習任務</h3>
+                <div class="task-item" data-task-id="vocab_1_5" data-category="vocab">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📚</span>
+                    <span class="task-text">單字第1～5回記憶</span>
+                </div>
+                <div class="task-item" data-task-id="translation_1_2" data-category="translation">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✍️</span>
+                    <span class="task-text">句型翻譯講義第1-2回</span>
+                </div>
+                <div class="task-item" data-task-id="cloze_1_5" data-category="cloze">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📝</span>
+                    <span class="task-text">克漏字第1～5回</span>
+                </div>
+                <div class="task-item" data-task-id="reading_1_5" data-category="reading">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📖</span>
+                    <span class="task-text">閱讀測驗第1～5回</span>
+                </div>
+                <div class="task-item" data-task-id="essay_1" data-category="essay">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✒️</span>
+                    <span class="task-text">作文第1篇（圖片題）</span>
+                </div>
+                <div class="task-item" data-task-id="b5_1" data-category="b5">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📘</span>
+                    <span class="task-text">B5課文第1回</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week1Progress" style="width: 0%"></div>
+                </div>
+                <p>本週完成度: <span id="week1Percent">0%</span></p>
+            </div>
+            <div class="celebration" id="celebration1">
+                <h2>🎉 恭喜完成第1週任務！</h2>
+                <p>Lesson 1 學習完成！繼續保持！</p>
+            </div>
+        </div>
+
+        <!-- Week 2 Content -->
+        <div class="week-content" id="week2">
+            <div class="class-info">
+                <h3>📅 第2週課堂內容 (7/13)</h3>
+                <p><strong>前15分鐘：</strong>📊 課堂測驗 <input type="number" id="test2" placeholder="分數" style="width:60px; margin-left:10px; padding:2px; border:1px solid #ccc; border-radius:4px;"></p>
+                <p><strong>接下來30分鐘：</strong>📖 Lesson 2 課文重點講解</p>
+                <p><strong>剩餘時間：</strong>🔍 錯題講解</p>
+                <p><strong>最後30分鐘：</strong>✒️ 圖片題作文講解</p>
+            </div>
+            <div class="tasks">
+                <h3>✅ 第2週學習任務</h3>
+                <div class="task-item" data-task-id="vocab_6_10" data-category="vocab">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📚</span>
+                    <span class="task-text">單字第6～10回記憶</span>
+                </div>
+                <div class="task-item" data-task-id="translation_3_4" data-category="translation">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✍️</span>
+                    <span class="task-text">句型翻譯講義第3-4回</span>
+                </div>
+                <div class="task-item" data-task-id="cloze_6_10" data-category="cloze">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📝</span>
+                    <span class="task-text">克漏字第6～10回</span>
+                </div>
+                <div class="task-item" data-task-id="reading_6_10" data-category="reading">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📖</span>
+                    <span class="task-text">閱讀測驗第6～10回</span>
+                </div>
+                <div class="task-item" data-task-id="essay_2" data-category="essay">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✒️</span>
+                    <span class="task-text">作文第2篇（圖片題）</span>
+                </div>
+                <div class="task-item" data-task-id="b5_2" data-category="b5">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📘</span>
+                    <span class="task-text">B5課文第2回</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week2Progress" style="width: 0%"></div>
+                </div>
+                <p>本週完成度: <span id="week2Percent">0%</span></p>
+            </div>
+            <div class="celebration" id="celebration2">
+                <h2>🎉 恭喜完成第2週任務！</h2>
+                <p>Lesson 2 學習完成！持續進步中！</p>
+            </div>
+        </div>
+
+        <!-- Week 3 Content -->
+        <div class="week-content" id="week3">
+            <div class="class-info">
+                <h3>📅 第3週課堂內容 (7/20)</h3>
+                <p><strong>前15分鐘：</strong>📊 課堂測驗 <input type="number" id="test3" placeholder="分數" style="width:60px; margin-left:10px; padding:2px; border:1px solid #ccc; border-radius:4px;"></p>
+                <p><strong>接下來30分鐘：</strong>📖 Lesson 3 課文重點講解</p>
+                <p><strong>剩餘時間：</strong>🔍 錯題講解</p>
+                <p><strong>最後30分鐘：</strong>✒️ 圖片題作文講解</p>
+            </div>
+            <div class="tasks">
+                <h3>✅ 第3週學習任務</h3>
+                <div class="task-item" data-task-id="vocab_11_15" data-category="vocab">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📚</span>
+                    <span class="task-text">單字第11～15回記憶</span>
+                </div>
+                <div class="task-item" data-task-id="translation_5_6" data-category="translation">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✍️</span>
+                    <span class="task-text">句型翻譯講義第5-6回</span>
+                </div>
+                <div class="task-item" data-task-id="cloze_11_15" data-category="cloze">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📝</span>
+                    <span class="task-text">克漏字第11～15回</span>
+                </div>
+                <div class="task-item" data-task-id="reading_11_15" data-category="reading">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📖</span>
+                    <span class="task-text">閱讀測驗第11～15回</span>
+                </div>
+                <div class="task-item" data-task-id="essay_3" data-category="essay">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✒️</span>
+                    <span class="task-text">作文第3篇（圖片題）</span>
+                </div>
+                <div class="task-item" data-task-id="b5_3" data-category="b5">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📘</span>
+                    <span class="task-text">B5課文第3回</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week3Progress" style="width: 0%"></div>
+                </div>
+                <p>本週完成度: <span id="week3Percent">0%</span></p>
+            </div>
+            <div class="celebration" id="celebration3">
+                <h2>🎉 恭喜完成第3週任務！</h2>
+                <p>Lesson 3 學習完成！學習節奏很穩定！</p>
+            </div>
+        </div>
+
+        <!-- Week 4 Content -->
+        <div class="week-content" id="week4">
+            <div class="class-info">
+                <h3>📅 第4週課堂內容 (7/27)</h3>
+                <p><strong>前15分鐘：</strong>📊 課堂測驗 <input type="number" id="test4" placeholder="分數" style="width:60px; margin-left:10px; padding:2px; border:1px solid #ccc; border-radius:4px;"></p>
+                <p><strong>接下來30分鐘：</strong>📖 Lesson 4 課文重點講解</p>
+                <p><strong>剩餘時間：</strong>🔍 錯題講解</p>
+                <p><strong>最後30分鐘：</strong>✒️ 論說文作文講解</p>
+            </div>
+            <div class="tasks">
+                <h3>✅ 第4週學習任務</h3>
+                <div class="task-item" data-task-id="vocab_16_20" data-category="vocab">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📚</span>
+                    <span class="task-text">單字第16～20回記憶</span>
+                </div>
+                <div class="task-item" data-task-id="translation_7_8" data-category="translation">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✍️</span>
+                    <span class="task-text">句型翻譯講義第7-8回</span>
+                </div>
+                <div class="task-item" data-task-id="cloze_16_20" data-category="cloze">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📝</span>
+                    <span class="task-text">克漏字第16～20回</span>
+                </div>
+                <div class="task-item" data-task-id="reading_16_20" data-category="reading">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📖</span>
+                    <span class="task-text">閱讀測驗第16～20回</span>
+                </div>
+                <div class="task-item" data-task-id="essay_4" data-category="essay">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✒️</span>
+                    <span class="task-text">作文第4篇（論說文）</span>
+                </div>
+                <div class="task-item" data-task-id="b5_4" data-category="b5">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📘</span>
+                    <span class="task-text">B5課文第4回</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week4Progress" style="width: 0%"></div>
+                </div>
+                <p>本週完成度: <span id="week4Percent">0%</span></p>
+            </div>
+            <div class="celebration" id="celebration4">
+                <h2>🎉 恭喜完成第4週任務！</h2>
+                <p>Lesson 4 學習完成！已經過半了！</p>
+            </div>
+        </div>
+
+        <!-- Week 5 Content -->
+        <div class="week-content" id="week5">
+            <div class="class-info">
+                <h3>📅 第5週課堂內容 (8/3)</h3>
+                <p><strong>前15分鐘：</strong>📊 課堂測驗 <input type="number" id="test5" placeholder="分數" style="width:60px; margin-left:10px; padding:2px; border:1px solid #ccc; border-radius:4px;"></p>
+                <p><strong>接下來30分鐘：</strong>📖 Lesson 5 課文重點講解</p>
+                <p><strong>剩餘時間：</strong>🔍 錯題講解</p>
+                <p><strong>最後30分鐘：</strong>✒️ 論說文作文講解</p>
+            </div>
+            <div class="tasks">
+                <h3>✅ 第5週學習任務</h3>
+                <div class="task-item" data-task-id="vocab_21_25" data-category="vocab">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📚</span>
+                    <span class="task-text">單字第21～25回記憶</span>
+                </div>
+                <div class="task-item" data-task-id="translation_9_10" data-category="translation">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✍️</span>
+                    <span class="task-text">句型翻譯講義第9-10回</span>
+                </div>
+                <div class="task-item" data-task-id="cloze_21_25" data-category="cloze">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📝</span>
+                    <span class="task-text">克漏字第21～25回</span>
+                </div>
+                <div class="task-item" data-task-id="reading_21_25" data-category="reading">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📖</span>
+                    <span class="task-text">閱讀測驗第21～25回</span>
+                </div>
+                <div class="task-item" data-task-id="mock_5" data-category="mock">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📋</span>
+                    <span class="task-text">模擬測驗（第1回）</span>
+                </div>
+                <div class="task-item" data-task-id="essay_5" data-category="essay">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✒️</span>
+                    <span class="task-text">作文第5篇（論說文）</span>
+                </div>
+                <div class="task-item" data-task-id="b5_5" data-category="b5">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📘</span>
+                    <span class="task-text">B5課文第5回</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week5Progress" style="width: 0%"></div>
+                </div>
+                <p>本週完成度: <span id="week5Percent">0%</span></p>
+            </div>
+            <div class="celebration" id="celebration5">
+                <h2>🎉 恭喜完成第5週任務！</h2>
+                <p>Lesson 5 學習完成！進入複習階段！</p>
+            </div>
+        </div>
+
+        <!-- Week 6 Content -->
+        <div class="week-content" id="week6">
+            <div class="class-info">
+                <h3>📅 第6週課堂內容 (8/10)</h3>
+                <p><strong>前15分鐘：</strong>📊 課堂測驗 <input type="number" id="test6" placeholder="分數" style="width:60px; margin-left:10px; padding:2px; border:1px solid #ccc; border-radius:4px;"></p>
+                <p><strong>接下來30分鐘：</strong>📖 Review L1–2 統整複習</p>
+                <p><strong>剩餘時間：</strong>🔍 錯題講解</p>
+                <p><strong>最後30分鐘：</strong>✒️ 論說文作文講解</p>
+            </div>
+            <div class="tasks">
+                <h3>✅ 第6週學習任務</h3>
+                <div class="task-item" data-task-id="vocab_26_30" data-category="vocab">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📚</span>
+                    <span class="task-text">單字第26～30回記憶</span>
+                </div>
+                <div class="task-item" data-task-id="translation_11_12" data-category="translation">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✍️</span>
+                    <span class="task-text">句型翻譯講義第11-12回</span>
+                </div>
+                <div class="task-item" data-task-id="cloze_26_30" data-category="cloze">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📝</span>
+                    <span class="task-text">克漏字第26～30回</span>
+                </div>
+                <div class="task-item" data-task-id="reading_26_30" data-category="reading">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📖</span>
+                    <span class="task-text">閱讀測驗第26～30回</span>
+                </div>
+                <div class="task-item" data-task-id="essay_6" data-category="essay">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✒️</span>
+                    <span class="task-text">作文第6篇（書信題）</span>
+                </div>
+                <div class="task-item" data-task-id="b5_review_1" data-category="b5">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📘</span>
+                    <span class="task-text">B5課文複習（第1-2回）</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week6Progress" style="width: 0%"></div>
+                </div>
+                <p>本週完成度: <span id="week6Percent">0%</span></p>
+            </div>
+            <div class="celebration" id="celebration6">
+                <h2>🎉 恭喜完成第6週任務！</h2>
+                <p>L1-2複習整合得很好！快要完成課程了！</p>
+            </div>
+        </div>
+
+        <!-- Week 7 Content -->
+        <div class="week-content" id="week7">
+            <div class="class-info">
+                <h3>📅 第7週課堂內容 (8/17)</h3>
+                <p><strong>前15分鐘：</strong>📊 課堂測驗 <input type="number" id="test7" placeholder="分數" style="width:60px; margin-left:10px; padding:2px; border:1px solid #ccc; border-radius:4px;"></p>
+                <p><strong>接下來30分鐘：</strong>📖 Review L3–4 統整複習</p>
+                <p><strong>剩餘時間：</strong>🔍 錯題講解</p>
+                <p><strong>最後30分鐘：</strong>✒️ 圖表題作文講解</p>
+            </div>
+            <div class="tasks">
+                <h3>✅ 第7週學習任務</h3>
+                <div class="task-item" data-task-id="vocab_31_35" data-category="vocab">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📚</span>
+                    <span class="task-text">單字第31～35回記憶</span>
+                </div>
+                <div class="task-item" data-task-id="translation_13" data-category="translation">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✍️</span>
+                    <span class="task-text">句型翻譯講義第13回</span>
+                </div>
+                <div class="task-item" data-task-id="cloze_31_35" data-category="cloze">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📝</span>
+                    <span class="task-text">克漏字第31～35回</span>
+                </div>
+                <div class="task-item" data-task-id="reading_31_35" data-category="reading">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📖</span>
+                    <span class="task-text">閱讀測驗第31～35回</span>
+                </div>
+                <div class="task-item" data-task-id="mock_7" data-category="mock">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📋</span>
+                    <span class="task-text">模擬測驗（第2回）</span>
+                </div>
+                <div class="task-item" data-task-id="essay_7" data-category="essay">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✒️</span>
+                    <span class="task-text">作文第7篇（圖表題）</span>
+                </div>
+                <div class="task-item" data-task-id="b5_review_2" data-category="b5">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📘</span>
+                    <span class="task-text">B5課文複習（第3-4回）</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week7Progress" style="width: 0%"></div>
+                </div>
+                <p>本週完成度: <span id="week7Percent">0%</span></p>
+            </div>
+            <div class="celebration" id="celebration7">
+                <h2>🎉 恭喜完成第7週任務！</h2>
+                <p>L3-4複習整合完成！最後衝刺階段！</p>
+            </div>
+        </div>
+
+        <!-- Week 8 Content -->
+        <div class="week-content" id="week8">
+            <div class="class-info">
+                <h3>📅 第8週課堂內容 (8/24)</h3>
+                <p><strong>前15分鐘：</strong>📊 課堂測驗 <input type="number" id="test8" placeholder="分數" style="width:60px; margin-left:10px; padding:2px; border:1px solid #ccc; border-radius:4px;"></p>
+                <p><strong>接下來時間：</strong>🔍 錯題講解 (已無新課文進度)</p>
+                <p><strong>最後30分鐘：</strong>✒️ 綜合作文演練與講解</p>
+            </div>
+            <div class="tasks">
+                <h3>✅ 第8週學習任務</h3>
+                <div class="task-item" data-task-id="vocab_36_40" data-category="vocab">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📚</span>
+                    <span class="task-text">單字第36～40回記憶</span>
+                </div>
+                <div class="task-item" data-task-id="translation_14" data-category="translation">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✍️</span>
+                    <span class="task-text">句型翻譯講義第14回</span>
+                </div>
+                <div class="task-item" data-task-id="cloze_36_40" data-category="cloze">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📝</span>
+                    <span class="task-text">克漏字第36～40回</span>
+                </div>
+                <div class="task-item" data-task-id="reading_36_40" data-category="reading">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📖</span>
+                    <span class="task-text">閱讀測驗第36～40回</span>
+                </div>
+                <div class="task-item" data-task-id="final_mock" data-category="mock">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📋</span>
+                    <span class="task-text">總複習模擬測驗</span>
+                </div>
+                <div class="task-item" data-task-id="essay_8" data-category="essay">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">✒️</span>
+                    <span class="task-text">作文第8篇（綜合演練）</span>
+                </div>
+                <div class="task-item" data-task-id="b5_review_3" data-category="b5">
+                    <div class="checkbox"></div>
+                    <span class="task-icon">📘</span>
+                    <span class="task-text">B5課文複習（第5回）</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week8Progress" style="width: 0%"></div>
+                </div>
+                <p>本週完成度: <span id="week8Percent">0%</span></p>
+            </div>
+            <div class="celebration" id="celebration8">
+                <h2>🎉 恭喜完成暑期課程！</h2>
+                <p>🌟 八週的努力圓滿完成！你已經為學測做好充分準備！</p>
+            </div>
+        </div>
+
+        <div class="tips">
+            <h3>💡 學習小貼士</h3>
+            <p>📌 <strong>每日複習：</strong>每天花15-20分鐘複習當週單字</p>
+            <p>📌 <strong>錯題整理：</strong>將做錯的題目整理成錯題本，定期複習</p>
+            <p>📌 <strong>作文練習：</strong>每週至少寫一篇完整作文，注意時間控制</p>
+            <p>📌 <strong>閱讀技巧：</strong>先看題目再讀文章，提高答題效率</p>
+        </div>
+
+        <div class="help-section">
+            <h3>📖 使用說明</h3>
+            <p>🔘 點擊任務項目可標記完成狀態</p>
+            <p>💾 記得定期保存進度，避免資料遺失</p>
+            <p>📊 統計資料會即時更新，幫助你掌握學習進度</p>
+            <p>🖨️ 可列印進度表作為紙本記錄</p>
+        </div>
+    </div>
+
+    <!-- 模態框 -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>📚 使用說明</h2>
+            <div style="text-align: left; margin: 20px 0;">
+                <h3>🎯 功能介紹</h3>
+                <p>• <strong>進度追蹤：</strong>點擊任務項目標記完成狀態</p>
+                <p>• <strong>統計分析：</strong>即時顯示各科目完成進度</p>
+                <p>• <strong>週次切換：</strong>點擊週次標籤查看不同週的內容</p>
+                <p>• <strong>資料保存：</strong>進度會自動保存到瀏覽器</p>
+                
+                <h3>💡 學習建議</h3>
+                <p>• 按照課堂進度逐步完成任務</p>
+                <p>• 每天複習當週重點內容</p>
+                <p>• 定期檢視統計數據調整學習策略</p>
+                <p>• 完成週任務後給自己小獎勵</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="resetModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeResetModal()">&times;</span>
+            <h2>⚠️ 確認重置</h2>
+            <p>這將清除所有進度記錄，此操作無法復原。</p>
+            <p>確定要重置所有進度嗎？</p>
+            <div style="margin-top: 20px;">
+                <button type="button" class="btn btn-danger" onclick="resetProgress()">確定重置</button>
+                <button type="button" class="btn btn-secondary" onclick="closeResetModal()" style="margin-left: 10px;">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeExportModal()">&times;</span>
+            <h2>📄 匯出進度</h2>
+            <p>請選擇匯出格式：</p>
+            <div style="margin: 20px 0;">
+                <button type="button" class="btn btn-primary" onclick="exportAsHTML()" style="margin: 10px; padding: 15px 25px;">
+                    🌐 匯出為HTML<br>
+                    <small>完整功能的網頁文件</small>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="exportAsJSON()" style="margin: 10px; padding: 15px 25px;">
+                    📋 匯出為JSON<br>
+                    <small>純數據文件</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="taskManagerModal" class="modal">
+        <div class="modal-content" style="max-width: 800px; max-height: 80vh; overflow-y: auto;">
+            <span class="close" onclick="closeTaskManager()">&times;</span>
+            <h2>⚙️ 任務管理</h2>
+            
+            <div style="margin: 20px 0; padding: 15px; background: #f0f8ff; border-radius: 8px;">
+                <h3>➕ 新增任務</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 2fr auto; gap: 10px; align-items: center; margin: 10px 0;">
+                    <select id="newTaskWeek" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="1">第1週</option>
+                        <option value="2">第2週</option>
+                        <option value="3">第3週</option>
+                        <option value="4">第4週</option>
+                        <option value="5">第5週</option>
+                        <option value="6">第6週</option>
+                        <option value="7">第7週</option>
+                        <option value="8">第8週</option>
+                    </select>
+                    <select id="newTaskCategory" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="vocab">📚 單字</option>
+                        <option value="translation">✍️ 翻譯</option>
+                        <option value="cloze">📝 克漏字</option>
+                        <option value="reading">📖 閱讀</option>
+                        <option value="essay">✒️ 作文</option>
+                        <option value="b5">📘 B5課文</option>
+                        <option value="mock">📋 模擬考</option>
+                        <option value="other">🔖 其他</option>
+                    </select>
+                    <input type="text" id="newTaskText" placeholder="任務描述" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <button type="button" class="btn btn-primary" onclick="addNewTask()" style="padding: 8px 15px;">新增</button>
+                </div>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h3>📝 現有任務列表</h3>
+                <div style="margin: 10px 0;">
+                    <label>篩選週次: </label>
+                    <select id="filterWeek" onchange="filterTasks()" style="padding: 5px; margin-left: 10px;">
+                        <option value="all">全部週次</option>
+                        <option value="1">第1週</option>
+                        <option value="2">第2週</option>
+                        <option value="3">第3週</option>
+                        <option value="4">第4週</option>
+                        <option value="5">第5週</option>
+                        <option value="6">第6週</option>
+                        <option value="7">第7週</option>
+                        <option value="8">第8週</option>
+                    </select>
+                </div>
+                <div id="taskList" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 10px;">
+                    <!-- 任務列表將在這裡動態生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 任務數據結構
+        const taskData = {
+            vocab: ['vocab_1_5', 'vocab_6_10', 'vocab_11_15', 'vocab_16_20', 'vocab_21_25', 'vocab_26_30', 'vocab_31_35', 'vocab_36_40'],
+            translation: ['translation_1_2', 'translation_3_4', 'translation_5_6', 'translation_7_8', 'translation_9_10', 'translation_11_12', 'translation_13', 'translation_14'],
+            cloze: ['cloze_1_5', 'cloze_6_10', 'cloze_11_15', 'cloze_16_20', 'cloze_21_25', 'cloze_26_30', 'cloze_31_35', 'cloze_36_40'],
+            reading: ['reading_1_5', 'reading_6_10', 'reading_11_15', 'reading_16_20', 'reading_21_25', 'reading_26_30', 'reading_31_35', 'reading_36_40'],
+            essay: ['essay_1', 'essay_2', 'essay_3', 'essay_4', 'essay_5', 'essay_6', 'essay_7', 'essay_8'],
+            mock: ['mock_5', 'mock_7', 'final_mock'],
+            b5: ['b5_1', 'b5_2', 'b5_3', 'b5_4', 'b5_5', 'b5_review_1', 'b5_review_2', 'b5_review_3']
+        };
+
+        // 週次任務配置
+        const weekTasks = {
+            1: ['vocab_1_5', 'translation_1_2', 'cloze_1_5', 'reading_1_5', 'essay_1', 'b5_1'],
+            2: ['vocab_6_10', 'translation_3_4', 'cloze_6_10', 'reading_6_10', 'essay_2', 'b5_2'],
+            3: ['vocab_11_15', 'translation_5_6', 'cloze_11_15', 'reading_11_15', 'essay_3', 'b5_3'],
+            4: ['vocab_16_20', 'translation_7_8', 'cloze_16_20', 'reading_16_20', 'essay_4', 'b5_4'],
+            5: ['vocab_21_25', 'translation_9_10', 'cloze_21_25', 'reading_21_25', 'mock_5', 'essay_5', 'b5_5'],
+            6: ['vocab_26_30', 'translation_11_12', 'cloze_26_30', 'reading_26_30', 'essay_6', 'b5_review_1'],
+            7: ['vocab_31_35', 'translation_13', 'cloze_31_35', 'reading_31_35', 'mock_7', 'essay_7', 'b5_review_2'],
+            8: ['vocab_36_40', 'translation_14', 'cloze_36_40', 'reading_36_40', 'final_mock', 'essay_8', 'b5_review_3']
+        };
+
+        // 全局變量
+        let progress = {};
+        let testScores = {};
+        let customTasks = {};
+        let isInitialized = false;
+
+        // 圖標映射
+        const categoryIcons = {
+            vocab: '📚',
+            translation: '✍️',
+            cloze: '📝',
+            reading: '📖',
+            essay: '✒️',
+            b5: '📘',
+            mock: '📋',
+            other: '🔖'
+        };
+
+        // 初始化
+        function init() {
+            if (isInitialized) {
+                console.log('Application already initialized');
+                return;
+            }
+            
+            console.log('Initializing application...');
+            
+            try {
+                loadProgress();
+                loadTestScores();
+                loadCustomTasks();
+                setupEventListeners();
+                updateAllProgress();
+                updatePrintDate();
+                setupTestScoreListeners();
+                
+                isInitialized = true;
+                console.log('Application initialized successfully');
+            } catch (error) {
+                console.error('Error during initialization:', error);
+            }
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // 設置主要按鈕事件
+            const saveBtn = document.getElementById('saveProgressBtn');
+            const exportBtn = document.getElementById('exportOptionsBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const helpBtn = document.getElementById('helpBtn');
+            const taskManagerBtn = document.getElementById('taskManagerBtn');
+            
+            if (saveBtn) saveBtn.addEventListener('click', saveProgress);
+            if (exportBtn) exportBtn.addEventListener('click', showExportOptions);
+            if (resetBtn) resetBtn.addEventListener('click', confirmReset);
+            if (helpBtn) helpBtn.addEventListener('click', showHelp);
+            if (taskManagerBtn) taskManagerBtn.addEventListener('click', showTaskManager);
+
+            // 設置週次標籤事件
+            setupWeekTabListeners();
+            
+            // 設置任務項目事件
+            setupTaskEventListeners();
+        }
+
+        // 設置週次標籤事件監聽器
+        function setupWeekTabListeners() {
+            document.querySelectorAll('.week-tab').forEach((tab, index) => {
+                const week = parseInt(tab.getAttribute('data-week')) || (index + 1);
+                
+                tab.addEventListener('click', function() {
+                    showWeek(week);
+                });
+            });
+        }
+
+        // 設置任務事件監聽器
+        function setupTaskEventListeners() {
+            document.querySelectorAll('.task-item').forEach(item => {
+                const taskId = item.getAttribute('data-task-id');
+                const category = item.getAttribute('data-category');
+                
+                if (taskId && category) {
+                    item.addEventListener('click', function(e) {
+                        if (e.target.classList.contains('delete-btn')) {
+                            e.stopPropagation();
+                            return;
+                        }
+                        toggleTask(taskId, category);
+                    });
+                }
+            });
+        }
+
+        // 載入進度
+        function loadProgress() {
+            const saved = JSON.parse(localStorage.getItem('englishProgress') || '{}');
+            progress = saved;
+            
+            Object.keys(progress).forEach(taskId => {
+                if (progress[taskId]) {
+                    const elements = document.querySelectorAll(`[data-task-id="${taskId}"]`);
+                    elements.forEach(element => {
+                        if (element) {
+                            element.classList.add('completed');
+                        }
+                    });
+                }
+            });
+        }
+
+        // 載入測驗分數
+        function loadTestScores() {
+            const saved = JSON.parse(localStorage.getItem('testScores') || '{}');
+            testScores = saved;
+            
+            for (let i = 1; i <= 8; i++) {
+                const input = document.getElementById(`test${i}`);
+                if (input && testScores[`test${i}`]) {
+                    input.value = testScores[`test${i}`];
+                }
+            }
+        }
+
+        // 載入自定義任務
+        function loadCustomTasks() {
+            const saved = JSON.parse(localStorage.getItem('customTasks') || '{}');
+            customTasks = saved;
+            renderCustomTasks();
+        }
+
+        // 設置測驗分數監聽器
+        function setupTestScoreListeners() {
+            for (let i = 1; i <= 8; i++) {
+                const input = document.getElementById(`test${i}`);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        testScores[`test${i}`] = this.value;
+                        localStorage.setItem('testScores', JSON.stringify(testScores));
+                    });
+                }
+            }
+        }
+
+        // 切換任務狀態
+        function toggleTask(taskId, category) {
+            console.log('toggleTask called:', taskId, category);
+            
+            progress[taskId] = !progress[taskId];
+            
+            const elements = document.querySelectorAll(`[data-task-id="${taskId}"]`);
+            elements.forEach(element => {
+                if (progress[taskId]) {
+                    element.classList.add('completed');
+                } else {
+                    element.classList.remove('completed');
+                }
+            });
+
+            if (progress[taskId]) {
+                showCelebration(taskId);
+            }
+            
+            updateAllProgress();
+            localStorage.setItem('englishProgress', JSON.stringify(progress));
+        }
+
+        // 顯示慶祝動畫
+        function showCelebration(taskId) {
+            for (let week = 1; week <= 8; week++) {
+                const weekTaskList = weekTasks[week] || [];
+                const completed = weekTaskList.every(task => progress[task]);
+                
+                if (completed && weekTaskList.includes(taskId)) {
+                    const celebration = document.getElementById(`celebration${week}`);
+                    if (celebration) {
+                        celebration.classList.add('show');
+                        setTimeout(() => {
+                            celebration.classList.remove('show');
+                        }, 3000);
+                    }
+                    break;
+                }
+            }
+        }
+
+        // 更新所有進度
+        function updateAllProgress() {
+            updateCategoryProgress();
+            updateWeekProgress();
+            updateTotalProgress();
+        }
+
+        // 更新分類進度
+        function updateCategoryProgress() {
+            Object.keys(taskData).forEach(category => {
+                const tasks = taskData[category] || [];
+                const completed = tasks.filter(task => progress[task]).length;
+                const percentage = tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0;
+                
+                const element = document.getElementById(`${category}Progress`);
+                if (element) {
+                    element.textContent = `${percentage}%`;
+                }
+            });
+        }
+
+        // 更新週進度
+        function updateWeekProgress() {
+            for (let week = 1; week <= 8; week++) {
+                const tasks = weekTasks[week] || [];
+                const completed = tasks.filter(task => progress[task]).length;
+                const percentage = tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0;
+                
+                const progressBar = document.getElementById(`week${week}Progress`);
+                const progressText = document.getElementById(`week${week}Percent`);
+                
+                if (progressBar) progressBar.style.width = `${percentage}%`;
+                if (progressText) progressText.textContent = `${percentage}%`;
+            }
+        }
+
+        // 更新總進度
+        function updateTotalProgress() {
+            const allTasks = Object.values(weekTasks).flat();
+            const completed = allTasks.filter(task => progress[task]).length;
+            const percentage = allTasks.length > 0 ? Math.round((completed / allTasks.length) * 100) : 0;
+            
+            const totalElement = document.getElementById('totalProgress');
+            const printElement = document.getElementById('print-total-progress');
+            
+            if (totalElement) totalElement.textContent = `${percentage}%`;
+            if (printElement) printElement.textContent = `${percentage}%`;
+        }
+
+        // 切換週次顯示
+        function showWeek(week) {
+            document.querySelectorAll('.week-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.week-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            const weekContent = document.getElementById(`week${week}`);
+            if (weekContent) {
+                weekContent.classList.add('active');
+            }
+            
+            const activeTab = document.querySelector(`[data-week="${week}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+        }
+
+        // 保存進度
+        function saveProgress() {
+            localStorage.setItem('englishProgress', JSON.stringify(progress));
+            alert('✅ 進度已保存！');
+        }
+
+        // 渲染自定義任務
+        function renderCustomTasks() {
+            document.querySelectorAll('.custom-task').forEach(el => el.remove());
+            
+            Object.keys(customTasks).forEach(taskId => {
+                const task = customTasks[taskId];
+                const weekContainer = document.querySelector(`#week${task.week} .tasks`);
+                if (weekContainer) {
+                    const taskElement = createTaskElement(taskId, task);
+                    const progressBar = weekContainer.querySelector('.progress-bar');
+                    weekContainer.insertBefore(taskElement, progressBar);
+                }
+            });
+        }
+
+        // 創建任務元素
+        function createTaskElement(taskId, task) {
+            const div = document.createElement('div');
+            div.className = 'task-item custom-task';
+            div.setAttribute('data-task-id', taskId);
+            div.setAttribute('data-category', task.category);
+            
+            if (progress[taskId]) {
+                div.classList.add('completed');
+            }
+            
+            div.innerHTML = `
+                <div class="checkbox"></div>
+                <span class="task-icon">${categoryIcons[task.category] || '🔖'}</span>
+                <span class="task-text">${task.text}</span>
+                <button type="button" class="btn btn-danger delete-btn" data-task-id="${taskId}" style="margin-left: auto; padding: 2px 8px; font-size: 12px;">刪除</button>
+            `;
+            
+            div.addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    e.stopPropagation();
+                    deleteTask(e.target.getAttribute('data-task-id'));
+                    return;
+                }
+                toggleTask(taskId, task.category);
+            });
+            
+            return div;
+        }
+
+        // 顯示任務管理器
+        function showTaskManager() {
+            const modal = document.getElementById('taskManagerModal');
+            if (modal) {
+                modal.style.display = 'block';
+                loadTaskList();
+            } else {
+                console.error('Task manager modal not found');
+            }
+        }
+
+        // 關閉任務管理器
+        function closeTaskManager() {
+            const modal = document.getElementById('taskManagerModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // 其他必要函數
+        function confirmReset() {
+            const modal = document.getElementById('resetModal');
+            if (modal) modal.style.display = 'block';
+        }
+
+        function showHelp() {
+            const modal = document.getElementById('helpModal');
+            if (modal) modal.style.display = 'block';
+        }
+
+        function showExportOptions() {
+            const modal = document.getElementById('exportModal');
+            if (modal) modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('helpModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function closeResetModal() {
+            const modal = document.getElementById('resetModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function closeExportModal() {
+            const modal = document.getElementById('exportModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function updatePrintDate() {
+            const element = document.getElementById('print-date');
+            if (element) {
+                element.textContent = new Date().toLocaleDateString('zh-TW');
+            }
+        }
+
+        // 新增、刪除、篩選任務的函數
+        function addNewTask() {
+            const week = document.getElementById('newTaskWeek').value;
+            const category = document.getElementById('newTaskCategory').value;
+            const text = document.getElementById('newTaskText').value.trim();
+            
+            if (!text) {
+                alert('請輸入任務描述！');
+                return;
+            }
+            
+            const taskId = `custom_${category}_${Date.now()}`;
+            
+            customTasks[taskId] = {
+                week: parseInt(week),
+                category: category,
+                text: text
+            };
+            
+            if (!weekTasks[week]) weekTasks[week] = [];
+            weekTasks[week].push(taskId);
+            
+            if (!taskData[category]) taskData[category] = [];
+            taskData[category].push(taskId);
+            
+            localStorage.setItem('customTasks', JSON.stringify(customTasks));
+            renderCustomTasks();
+            updateAllProgress();
+            loadTaskList();
+            
+            document.getElementById('newTaskText').value = '';
+            alert('✅ 任務新增成功！');
+        }
+
+        function deleteTask(taskId) {
+            if (!confirm('確定要刪除這個任務嗎？')) return;
+            
+            const task = customTasks[taskId];
+            if (task) {
+                delete customTasks[taskId];
+                delete progress[taskId];
+                
+                const weekIndex = weekTasks[task.week]?.indexOf(taskId);
+                if (weekIndex > -1) {
+                    weekTasks[task.week].splice(weekIndex, 1);
+                }
+                
+                const categoryIndex = taskData[task.category]?.indexOf(taskId);
+                if (categoryIndex > -1) {
+                    taskData[task.category].splice(categoryIndex, 1);
+                }
+                
+                localStorage.setItem('customTasks', JSON.stringify(customTasks));
+                localStorage.setItem('englishProgress', JSON.stringify(progress));
+                renderCustomTasks();
+                updateAllProgress();
+                loadTaskList();
+                
+                alert('🗑️ 任務已刪除！');
+            }
+        }
+
+        function loadTaskList() {
+            // 簡化版的任務列表載入
+            console.log('Loading task list...');
+        }
+
+        function filterTasks() {
+            loadTaskList();
+        }
+
+        function resetProgress() {
+            progress = {};
+            testScores = {};
+            customTasks = {};
+            localStorage.removeItem('englishProgress');
+            localStorage.removeItem('testScores');
+            localStorage.removeItem('customTasks');
+            
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.classList.remove('completed');
+            });
+            
+            for (let i = 1; i <= 8; i++) {
+                const input = document.getElementById(`test${i}`);
+                if (input) input.value = '';
+            }
+            
+            renderCustomTasks();
+            updateAllProgress();
+            closeResetModal();
+            alert('🔄 進度已重置！');
+        }
+
+        function exportAsHTML() {
+            const data = {
+                progress: progress,
+                testScores: testScores,
+                customTasks: customTasks,
+                exportDate: new Date().toLocaleDateString('zh-TW'),
+                totalProgress: document.getElementById('totalProgress').textContent
+            };
+            
+            const htmlContent = generateCompleteHTML(data);
+            const blob = new Blob([htmlContent], { 
+                type: 'text/html;charset=utf-8' 
+            });
+            
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `暑期英文進度表_${new Date().toISOString().split('T')[0]}.html`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            closeExportModal();
+            alert('📄 進度表已匯出為HTML文件！');
+        }
+
+        function exportAsJSON() {
+            const data = {
+                progress: progress,
+                testScores: testScores,
+                customTasks: customTasks,
+                exportDate: new Date().toLocaleDateString('zh-TW'),
+                totalProgress: document.getElementById('totalProgress').textContent
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `暑期英文進度_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            closeExportModal();
+            alert('📄 JSON數據已匯出！');
+        }
+
+        function generateCompleteHTML(data) {
+            const currentHTML = document.documentElement.outerHTML;
+            return `<!DOCTYPE html>\n${currentHTML}`;
+        }
+
+        // 點擊模態框外部關閉
+        window.onclick = function(event) {
+            const modals = ['helpModal', 'resetModal', 'taskManagerModal', 'exportModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal && event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+
+        // 初始化應用
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
